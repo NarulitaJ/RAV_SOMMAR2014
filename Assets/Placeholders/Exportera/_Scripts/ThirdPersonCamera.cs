@@ -230,10 +230,19 @@ public class ThirdPersonCamera : MonoBehaviour {
 		case CamStates.Behind:
 			
 			//saving the rotation amount
-			if (Mathf.Abs(rightX) > deadZoneX)
-				rotationAmountX += rightX * Time.deltaTime * RotationSpeedX * ((InvertedX == true) ? -1 : 1);
-			if (Mathf.Abs(rightY) > deadZoneY)
+			if(Mathf.Abs(rightY) > Mathf.Abs(rightX) && Mathf.Abs(rightX) > deadZoneY){
 				rotationAmountY += rightY * Time.deltaTime * RotationSpeedY * ((InvertedY == true) ? -1 : 1);
+			}
+			else if(Mathf.Abs (rightX) > Mathf.Abs(rightY) && Mathf.Abs (rightX) > deadZoneX){
+				rotationAmountX += rightX * Time.deltaTime * RotationSpeedX * ((InvertedX == true) ? -1 : 1);
+			}
+			else{
+				if (Mathf.Abs(rightX) > deadZoneX)
+					rotationAmountX += rightX * Time.deltaTime * RotationSpeedX * ((InvertedX == true) ? -1 : 1);
+				if (Mathf.Abs(rightY) > deadZoneY)
+					rotationAmountY += rightY * Time.deltaTime * RotationSpeedY * ((InvertedY == true) ? -1 : 1);
+			}
+			//}
 			
 			//clamping Y rotation
 			rotationAmountY = Mathf.Clamp(rotationAmountY, cameraClampingY.x, cameraClampingY.y);
@@ -308,10 +317,11 @@ public class ThirdPersonCamera : MonoBehaviour {
 			break;
 		case CamStates.Push:			
 			//saving the rotation amount
-			if (Mathf.Abs(rightX) > deadZoneX)
-				rotationAmountX += rightX * Time.deltaTime * RotationSpeedX * ((InvertedX == true) ? -1 : 1);
+
 			if (Mathf.Abs(rightY) > deadZoneY)
 				rotationAmountY += rightY * Time.deltaTime * RotationSpeedY * ((InvertedY == true) ? -1 : 1);
+			if (Mathf.Abs(rightX) > deadZoneX && Mathf.Abs(rightY) > 0.3)
+				rotationAmountX += rightX * Time.deltaTime * RotationSpeedX * ((InvertedX == true) ? -1 : 1);
 			
 			//clamping Y rotation
 			rotationAmountY = Mathf.Clamp(rotationAmountY, cameraClampingY.x, cameraClampingY.y);
@@ -319,7 +329,7 @@ public class ThirdPersonCamera : MonoBehaviour {
 			//clamping X rotation
 			if (Mathf.Abs(rotationAmountX) > 360.0f)
 				rotationAmountX = 0.0f;
-			
+
 			//addding the rotations
 			currentLookDirection = Quaternion.Euler(rotationAmountY, rotationAmountX, 0.0f) * Vector3.forward;
 			Vector3 lookPos = _obj.transform.position + (PlayerXform.position - _obj.transform.position)/2.0f + _obj.collider.bounds.extents.y*0.985f*Vector3.up; 

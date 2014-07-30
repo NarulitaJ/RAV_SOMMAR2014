@@ -139,6 +139,15 @@ public class JumpingMan : MonoBehaviour {
 
 		if(_jump){
 
+			if(_stickLength != 0){
+				_jumpingMove.x = transform.forward.x * _MAX_AIRSPEED;
+				_jumpingMove.z = transform.forward.z * _MAX_AIRSPEED;
+				_jumpingMove *= Mathf.Clamp(_stickLength,1, 1);
+			}else{
+				_jumpingMove = new Vector3(0,_jumpingMove.y,0);
+			}
+
+
 			if(Vector3.Angle(Vector3.up, _rayHit.normal) < _slidingAngle){
 
 				/*
@@ -247,7 +256,7 @@ public class JumpingMan : MonoBehaviour {
 		return _jump;
 	}
 
-	public void Jumpy(){
+	private void Jumpy(){ //Används i ett animation event
 		_jump = true;
 
 	}
